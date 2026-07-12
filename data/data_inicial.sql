@@ -1,7 +1,6 @@
 ﻿-- data_inicial.sql
 -- Datos base para el sistema de gimnasios
 
--- Crear las tablas
 CREATE TABLE servicio (
     id INT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -38,7 +37,6 @@ CREATE TABLE usuario (
     email VARCHAR(30) NOT NULL UNIQUE
 );
 
--- Cargar datos base
 INSERT INTO usuario (nombre, email) VALUES 
 ('Víctor', 'victor_m@g.com'),
 ('María', 'maria_m@t.com'),

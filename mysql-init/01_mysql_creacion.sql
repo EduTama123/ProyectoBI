@@ -1,5 +1,7 @@
 ﻿-- 01_mysql_creacion.sql
 -- Base operacional de inscripciones, clases y asistencia para gimnasios
+-- ELIMINADA tabla inventario_clases
+-- AGREGADO campo seguro_medico en inscripcion
 
 CREATE DATABASE IF NOT EXISTS gimnasio_db
   CHARACTER SET utf8mb4
@@ -10,7 +12,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS detalle_inscripcion;
 DROP TABLE IF EXISTS inscripcion;
 DROP TABLE IF EXISTS asistencia;
-DROP TABLE IF EXISTS inventario_clases;
 DROP TABLE IF EXISTS clase;
 DROP TABLE IF EXISTS servicio;
 DROP TABLE IF EXISTS instructor;
@@ -56,6 +57,7 @@ CREATE TABLE inscripcion (
     documento_cliente VARCHAR(25),
     forma_pago VARCHAR(30),
     descuento DECIMAL(10,2) DEFAULT 0,
+    seguro_medico BOOLEAN DEFAULT FALSE,
     estado VARCHAR(20) NOT NULL DEFAULT 'COMPLETADA',
     observacion VARCHAR(200)
 );
@@ -82,16 +84,6 @@ CREATE TABLE asistencia (
     estado_asistencia VARCHAR(20) DEFAULT 'PENDIENTE',
     observacion VARCHAR(200),
     CONSTRAINT fk_asistencia_clase FOREIGN KEY (codigo_clase)
-        REFERENCES clase(codigo_clase)
-);
-
-CREATE TABLE inventario_clases (
-    sucursal_origen VARCHAR(60) NOT NULL,
-    codigo_clase VARCHAR(15) NOT NULL,
-    cupos_disponibles INT,
-    fecha_actualizacion DATE,
-    PRIMARY KEY (sucursal_origen, codigo_clase),
-    CONSTRAINT fk_inv_clase FOREIGN KEY (codigo_clase)
         REFERENCES clase(codigo_clase)
 );
 

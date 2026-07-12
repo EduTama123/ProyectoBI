@@ -26,7 +26,6 @@ CREATE TABLE cliente_local (
 CREATE INDEX idx_cliente_cedula_ruc ON cliente_local(cedula_ruc);
 CREATE INDEX idx_cliente_apellidos ON cliente_local(apellido1, apellido2);
 
--- Clientes iniciales (37 registros)
 INSERT INTO cliente_local
 (codigo_cliente, cedula_ruc, apellido1, apellido2, nombres, direccion,
  telefono_principal, telefono_alterno, email_contacto, fecha_alta,
@@ -70,115 +69,108 @@ VALUES
 (1036, '9999999999', 'NO IDENTIFICADO', NULL, 'CLIENTE', 'Quito', NULL, NULL, NULL, '2026-01-01 00:00:00', 'N', 'N', 'A', 'Registro genérico creado por un operador'),
 (1037, NULL, 'FINAL', NULL, 'CONSUMIDOR', NULL, NULL, NULL, NULL, '2026-01-01 00:00:00', 'N', 'N', 'A', 'Cliente genérico para ventas sin identificación');
 
--- Clientes masivos (1050+ registros)
-INSERT INTO cliente_local
-(codigo_cliente, cedula_ruc, apellido1, apellido2, nombres, direccion,
- telefono_principal, telefono_alterno, email_contacto, fecha_alta,
- tipo_cliente, permite_credito, estado_registro, observaciones)
-SELECT 
-    ROW_NUMBER() OVER (ORDER BY n.nombre, n.apellido, c.ciudad) + 2000,
-    CASE 
-        WHEN RAND() < 0.04 THEN ' ' || LPAD((ROW_NUMBER() OVER (ORDER BY n.nombre, n.apellido, c.ciudad) + 1712346000), 10, '0')
-        WHEN RAND() < 0.04 THEN LPAD((ROW_NUMBER() OVER (ORDER BY n.nombre, n.apellido, c.ciudad) + 1712346000), 10, '0') || ' '
-        WHEN RAND() < 0.04 THEN CONCAT(
-            SUBSTRING(LPAD((ROW_NUMBER() OVER (ORDER BY n.nombre, n.apellido, c.ciudad) + 1712346000), 10, '0'), 1, 3), '-',
-            SUBSTRING(LPAD((ROW_NUMBER() OVER (ORDER BY n.nombre, n.apellido, c.ciudad) + 1712346000), 10, '0'), 4, 3), '-',
-            SUBSTRING(LPAD((ROW_NUMBER() OVER (ORDER BY n.nombre, n.apellido, c.ciudad) + 1712346000), 10, '0'), 7, 4)
-        )
-        ELSE LPAD((ROW_NUMBER() OVER (ORDER BY n.nombre, n.apellido, c.ciudad) + 1712346000), 10, '0')
-    END,
-    n.apellido,
-    NULL,
-    n.nombre,
-    CONCAT(c.ciudad, ' - Calle ', FLOOR(RAND() * 100) + 1, ' #', FLOOR(RAND() * 50) + 1, '-', FLOOR(RAND() * 20) + 1),
-    CONCAT('099', LPAD(FLOOR(RAND() * 1000000), 6, '0')),
-    CASE WHEN RAND() < 0.3 THEN CONCAT('099', LPAD(FLOOR(RAND() * 1000000), 6, '0')) ELSE NULL END,
-    CASE WHEN RAND() < 0.1 THEN NULL ELSE LOWER(CONCAT(SUBSTRING(n.nombre, 1, 1), '.', n.apellido, FLOOR(RAND() * 1000), '@gmail.com')) END,
-    CONCAT(
-        CASE WHEN RAND() < 0.5 THEN '2024' ELSE '2025' END,
-        '-',
-        LPAD(FLOOR(RAND() * 12) + 1, 2, '0'),
-        '-',
-        LPAD(FLOOR(RAND() * 28) + 1, 2, '0'),
-        ' ',
-        LPAD(FLOOR(RAND() * 24), 2, '0'),
-        ':',
-        LPAD(FLOOR(RAND() * 60), 2, '0'),
-        ':00'
-    ),
-    CASE 
-        WHEN RAND() < 0.2 THEN 'E' 
-        WHEN RAND() < 0.4 THEN 'F' 
-        ELSE 'N' 
-    END,
-    CASE WHEN RAND() < 0.15 THEN 'S' ELSE 'N' END,
-    CASE WHEN RAND() < 0.05 THEN 'I' ELSE 'A' END,
-    CASE WHEN RAND() < 0.05 THEN 'Cliente con observaciones especiales' ELSE NULL END
-FROM (
-    SELECT 'Juan' AS nombre, 'Pérez' AS apellido UNION ALL
-    SELECT 'María', 'García' UNION ALL
-    SELECT 'Carlos', 'Rodríguez' UNION ALL
-    SELECT 'Ana', 'Martínez' UNION ALL
-    SELECT 'Luis', 'López' UNION ALL
-    SELECT 'Laura', 'González' UNION ALL
-    SELECT 'Pedro', 'Sánchez' UNION ALL
-    SELECT 'Isabel', 'Ramírez' UNION ALL
-    SELECT 'Miguel', 'Torres' UNION ALL
-    SELECT 'Carmen', 'Flores' UNION ALL
-    SELECT 'Jorge', 'Díaz' UNION ALL
-    SELECT 'Sofía', 'Ortiz' UNION ALL
-    SELECT 'Diego', 'Cruz' UNION ALL
-    SELECT 'Elena', 'Morales' UNION ALL
-    SELECT 'Fernando', 'Reyes' UNION ALL
-    SELECT 'Patricia', 'Gutiérrez' UNION ALL
-    SELECT 'Andrés', 'Mendoza' UNION ALL
-    SELECT 'Teresa', 'Castillo' UNION ALL
-    SELECT 'Roberto', 'Ríos' UNION ALL
-    SELECT 'Gloria', 'Aguilar' UNION ALL
-    SELECT 'Manuel', 'Romero' UNION ALL
-    SELECT 'Rosa', 'Vargas' UNION ALL
-    SELECT 'Antonio', 'Soto' UNION ALL
-    SELECT 'Marta', 'Paredes' UNION ALL
-    SELECT 'Francisco', 'Castro' UNION ALL
-    SELECT 'Lucía', 'Jiménez' UNION ALL
-    SELECT 'Alberto', 'Serrano' UNION ALL
-    SELECT 'Dolores', 'Herrera' UNION ALL
-    SELECT 'Rafael', 'Velásquez' UNION ALL
-    SELECT 'Carmela', 'Núñez' UNION ALL
-    SELECT 'David', 'Molina' UNION ALL
-    SELECT 'Angela', 'Delgado' UNION ALL
-    SELECT 'Sergio', 'Ramos' UNION ALL
-    SELECT 'Julia', 'Vega' UNION ALL
-    SELECT 'Oscar', 'Ortega' UNION ALL
-    SELECT 'Silvia', 'Méndez' UNION ALL
-    SELECT 'Hugo', 'Suárez' UNION ALL
-    SELECT 'Alicia', 'Cordero' UNION ALL
-    SELECT 'Eduardo', 'Valencia' UNION ALL
-    SELECT 'Natalia', 'Benítez' UNION ALL
-    SELECT 'Raúl', 'Carvajal' UNION ALL
-    SELECT 'Lourdes', 'Salazar' UNION ALL
-    SELECT 'Enrique', 'Ponce' UNION ALL
-    SELECT 'Claudia', 'León' UNION ALL
-    SELECT 'Javier', 'Uribe' UNION ALL
-    SELECT 'Margarita', 'Ayala' UNION ALL
-    SELECT 'Tomás', 'Barrera' UNION ALL
-    SELECT 'Isabela', 'Cabrera' UNION ALL
-    SELECT 'Pablo', 'Hernández' UNION ALL
-    SELECT 'Paula', 'Quintero' UNION ALL
-) n
-CROSS JOIN (
-    SELECT 'Quito' AS ciudad UNION ALL
-    SELECT 'Guayaquil' UNION ALL
-    SELECT 'Cuenca' UNION ALL
-    SELECT 'Sangolquí' UNION ALL
-    SELECT 'Cumbayá' UNION ALL
-    SELECT 'Tumbaco' UNION ALL
-    SELECT 'Machachi' UNION ALL
-    SELECT 'Latacunga' UNION ALL
-    SELECT 'Ambato' UNION ALL
-    SELECT 'Riobamba'
-) c
-LIMIT 1050;
+-- Clientes masivos (1050 registros)
+DELIMITER $$
+DROP PROCEDURE IF EXISTS generar_clientes_masivos$$
+CREATE PROCEDURE generar_clientes_masivos()
+BEGIN
+    DECLARE i INT DEFAULT 0;
+    DECLARE v_nombre VARCHAR(50);
+    DECLARE v_apellido VARCHAR(50);
+    DECLARE v_ciudad VARCHAR(50);
+    DECLARE v_cedula VARCHAR(20);
+    DECLARE v_codigo INT;
+    DECLARE v_random INT;
+    
+    SET i = 0;
+    WHILE i < 1050 DO
+        SET v_random = FLOOR(RAND() * 50);
+        SET v_nombre = CASE v_random
+            WHEN 0 THEN 'Juan' WHEN 1 THEN 'María' WHEN 2 THEN 'Carlos' WHEN 3 THEN 'Ana' WHEN 4 THEN 'Luis'
+            WHEN 5 THEN 'Laura' WHEN 6 THEN 'Pedro' WHEN 7 THEN 'Isabel' WHEN 8 THEN 'Miguel' WHEN 9 THEN 'Carmen'
+            WHEN 10 THEN 'Jorge' WHEN 11 THEN 'Sofía' WHEN 12 THEN 'Diego' WHEN 13 THEN 'Elena' WHEN 14 THEN 'Fernando'
+            WHEN 15 THEN 'Patricia' WHEN 16 THEN 'Andrés' WHEN 17 THEN 'Teresa' WHEN 18 THEN 'Roberto' WHEN 19 THEN 'Gloria'
+            WHEN 20 THEN 'Manuel' WHEN 21 THEN 'Rosa' WHEN 22 THEN 'Antonio' WHEN 23 THEN 'Marta' WHEN 24 THEN 'Francisco'
+            WHEN 25 THEN 'Lucía' WHEN 26 THEN 'Alberto' WHEN 27 THEN 'Dolores' WHEN 28 THEN 'Rafael' WHEN 29 THEN 'Carmela'
+            WHEN 30 THEN 'David' WHEN 31 THEN 'Angela' WHEN 32 THEN 'Sergio' WHEN 33 THEN 'Julia' WHEN 34 THEN 'Oscar'
+            WHEN 35 THEN 'Silvia' WHEN 36 THEN 'Hugo' WHEN 37 THEN 'Alicia' WHEN 38 THEN 'Eduardo' WHEN 39 THEN 'Natalia'
+            WHEN 40 THEN 'Raúl' WHEN 41 THEN 'Lourdes' WHEN 42 THEN 'Enrique' WHEN 43 THEN 'Claudia' WHEN 44 THEN 'Javier'
+            WHEN 45 THEN 'Margarita' WHEN 46 THEN 'Tomás' WHEN 47 THEN 'Isabela' WHEN 48 THEN 'Pablo' WHEN 49 THEN 'Paula'
+        END;
+        
+        SET v_apellido = CASE v_random
+            WHEN 0 THEN 'Pérez' WHEN 1 THEN 'García' WHEN 2 THEN 'Rodríguez' WHEN 3 THEN 'Martínez' WHEN 4 THEN 'López'
+            WHEN 5 THEN 'González' WHEN 6 THEN 'Sánchez' WHEN 7 THEN 'Ramírez' WHEN 8 THEN 'Torres' WHEN 9 THEN 'Flores'
+            WHEN 10 THEN 'Díaz' WHEN 11 THEN 'Ortiz' WHEN 12 THEN 'Cruz' WHEN 13 THEN 'Morales' WHEN 14 THEN 'Reyes'
+            WHEN 15 THEN 'Gutiérrez' WHEN 16 THEN 'Mendoza' WHEN 17 THEN 'Castillo' WHEN 18 THEN 'Ríos' WHEN 19 THEN 'Aguilar'
+            WHEN 20 THEN 'Romero' WHEN 21 THEN 'Vargas' WHEN 22 THEN 'Soto' WHEN 23 THEN 'Paredes' WHEN 24 THEN 'Castro'
+            WHEN 25 THEN 'Jiménez' WHEN 26 THEN 'Serrano' WHEN 27 THEN 'Herrera' WHEN 28 THEN 'Velásquez' WHEN 29 THEN 'Núñez'
+            WHEN 30 THEN 'Molina' WHEN 31 THEN 'Delgado' WHEN 32 THEN 'Ramos' WHEN 33 THEN 'Vega' WHEN 34 THEN 'Ortega'
+            WHEN 35 THEN 'Méndez' WHEN 36 THEN 'Suárez' WHEN 37 THEN 'Cordero' WHEN 38 THEN 'Valencia' WHEN 39 THEN 'Benítez'
+            WHEN 40 THEN 'Carvajal' WHEN 41 THEN 'Salazar' WHEN 42 THEN 'Ponce' WHEN 43 THEN 'León' WHEN 44 THEN 'Uribe'
+            WHEN 45 THEN 'Ayala' WHEN 46 THEN 'Barrera' WHEN 47 THEN 'Cabrera' WHEN 48 THEN 'Hernández' WHEN 49 THEN 'Quintero'
+        END;
+        
+        SET v_ciudad = CASE FLOOR(RAND() * 10)
+            WHEN 0 THEN 'Quito' WHEN 1 THEN 'Guayaquil' WHEN 2 THEN 'Cuenca'
+            WHEN 3 THEN 'Sangolquí' WHEN 4 THEN 'Cumbayá' WHEN 5 THEN 'Tumbaco'
+            WHEN 6 THEN 'Machachi' WHEN 7 THEN 'Latacunga' WHEN 8 THEN 'Ambato'
+            ELSE 'Riobamba'
+        END;
+        
+        SET v_random = FLOOR(RAND() * 100);
+        SET v_cedula = CASE
+            WHEN v_random < 4 THEN CONCAT(' ', LPAD(i + 1712346000, 10, '0'))
+            WHEN v_random < 8 THEN CONCAT(LPAD(i + 1712346000, 10, '0'), ' ')
+            WHEN v_random < 12 THEN CONCAT(
+                SUBSTRING(LPAD(i + 1712346000, 10, '0'), 1, 3), '-',
+                SUBSTRING(LPAD(i + 1712346000, 10, '0'), 4, 3), '-',
+                SUBSTRING(LPAD(i + 1712346000, 10, '0'), 7, 4)
+            )
+            ELSE LPAD(i + 1712346000, 10, '0')
+        END;
+        
+        SET v_codigo = i + 2000;
+        
+        INSERT INTO cliente_local
+        (codigo_cliente, cedula_ruc, apellido1, apellido2, nombres, direccion,
+         telefono_principal, telefono_alterno, email_contacto, fecha_alta,
+         tipo_cliente, permite_credito, estado_registro, observaciones)
+        VALUES (
+            v_codigo,
+            v_cedula,
+            v_apellido,
+            NULL,
+            v_nombre,
+            CONCAT(v_ciudad, ' - Calle ', FLOOR(RAND() * 100) + 1, ' #', FLOOR(RAND() * 50) + 1),
+            CONCAT('099', LPAD(FLOOR(RAND() * 1000000), 6, '0')),
+            CASE WHEN RAND() < 0.3 THEN CONCAT('099', LPAD(FLOOR(RAND() * 1000000), 6, '0')) ELSE NULL END,
+            CASE WHEN RAND() < 0.1 THEN NULL ELSE LOWER(CONCAT(SUBSTRING(v_nombre, 1, 1), '.', v_apellido, FLOOR(RAND() * 1000), '@gmail.com')) END,
+            CONCAT(
+                CASE WHEN RAND() < 0.5 THEN '2024' ELSE '2025' END,
+                '-',
+                LPAD(FLOOR(RAND() * 12) + 1, 2, '0'),
+                '-',
+                LPAD(FLOOR(RAND() * 28) + 1, 2, '0'),
+                ' ',
+                LPAD(FLOOR(RAND() * 24), 2, '0'),
+                ':',
+                LPAD(FLOOR(RAND() * 60), 2, '0'),
+                ':00'
+            ),
+            CASE WHEN RAND() < 0.2 THEN 'E' WHEN RAND() < 0.4 THEN 'F' ELSE 'N' END,
+            CASE WHEN RAND() < 0.15 THEN 'S' ELSE 'N' END,
+            CASE WHEN RAND() < 0.05 THEN 'I' ELSE 'A' END,
+            CASE WHEN RAND() < 0.05 THEN 'Cliente con observaciones especiales' ELSE NULL END
+        );
+        
+        SET i = i + 1;
+    END WHILE;
+END$$
+DELIMITER ;
+
+CALL generar_clientes_masivos();
+DROP PROCEDURE IF EXISTS generar_clientes_masivos;
 
 -- ==================== VERIFICACIONES ====================
 -- SELECT COUNT(*) AS total_clientes_mysql FROM cliente_local;

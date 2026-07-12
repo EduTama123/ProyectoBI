@@ -1,6 +1,6 @@
 ﻿-- 02_postgresql_datos.sql
--- Datos de gestión con errores deliberados + datos masivos (CORREGIDO)
--- Eliminadas tablas operacion y funcion
+-- Datos de gestión con errores deliberados + datos masivos
+-- AGREGADA tabla inventario_maquinaria con registros desde 2005
 
 SET search_path TO gestion, public;
 
@@ -30,8 +30,7 @@ INSERT INTO sucursal (codigo_sucursal, nombre_oficial, codigo_zona, ciudad, dire
 ('SUR', 'Gimnasio del Sur', 'ZS', 'quito ', 'Av. Maldonado S25-10', -0.285110, -78.548900, DATE '2023-01-10', TRUE),
 ('VALLE', 'Gimnasio Valle de los Chillos', 'ZV', 'Sangolquí', 'Av. Calderón 101', -0.334120, -78.449800, DATE '2024-04-20', TRUE);
 
--- ==================== CLIENTES (34 iniciales + masivos) ====================
--- Clientes iniciales (34 registros con errores)
+-- ==================== CLIENTES INICIALES (34 registros) ====================
 INSERT INTO cliente (documento, nombres, ciudad, fecha_nacimiento, sexo, codigo_segmento, fecha_registro, correo, activo) VALUES
 ('1712345601', 'Paola Rodríguez', 'Quito', DATE '1974-10-22', 'F', 'NUEVO', DATE '2024-04-25', 'paola_rodriguez@correo.com', TRUE),
 ('1712345602', 'Elena Mena', 'quito', DATE '1989-10-02', 'M', 'FREC', DATE '2025-06-15', 'elena_mena@correo.com', TRUE),
@@ -69,81 +68,37 @@ INSERT INTO cliente (documento, nombres, ciudad, fecha_nacimiento, sexo, codigo_
 ('0000000000', 'Cliente de prueba', NULL, NULL, NULL, 'INACT', DATE '2025-01-01', NULL, FALSE);
 
 -- ==================== CLIENTES MASIVOS (1050 registros) ====================
--- Creamos una tabla temporal con nombres y apellidos
 CREATE TEMP TABLE temp_nombres_postgres AS
 SELECT * FROM (VALUES
-    (1, 'Juan', 'Pérez', 'M'),
-    (2, 'María', 'García', 'F'),
-    (3, 'Carlos', 'Rodríguez', 'M'),
-    (4, 'Ana', 'Martínez', 'F'),
-    (5, 'Luis', 'López', 'M'),
-    (6, 'Laura', 'González', 'F'),
-    (7, 'Pedro', 'Sánchez', 'M'),
-    (8, 'Isabel', 'Ramírez', 'F'),
-    (9, 'Miguel', 'Torres', 'M'),
-    (10, 'Carmen', 'Flores', 'F'),
-    (11, 'Jorge', 'Díaz', 'M'),
-    (12, 'Sofía', 'Ortiz', 'F'),
-    (13, 'Diego', 'Cruz', 'M'),
-    (14, 'Elena', 'Morales', 'F'),
-    (15, 'Fernando', 'Reyes', 'M'),
-    (16, 'Patricia', 'Gutiérrez', 'F'),
-    (17, 'Andrés', 'Mendoza', 'M'),
-    (18, 'Teresa', 'Castillo', 'F'),
-    (19, 'Roberto', 'Ríos', 'M'),
-    (20, 'Gloria', 'Aguilar', 'F'),
-    (21, 'Manuel', 'Romero', 'M'),
-    (22, 'Rosa', 'Vargas', 'F'),
-    (23, 'Antonio', 'Soto', 'M'),
-    (24, 'Marta', 'Paredes', 'F'),
-    (25, 'Francisco', 'Castro', 'M'),
-    (26, 'Lucía', 'Jiménez', 'F'),
-    (27, 'Alberto', 'Serrano', 'M'),
-    (28, 'Dolores', 'Herrera', 'F'),
-    (29, 'Rafael', 'Velásquez', 'M'),
-    (30, 'Carmela', 'Núñez', 'F'),
-    (31, 'David', 'Molina', 'M'),
-    (32, 'Angela', 'Delgado', 'F'),
-    (33, 'Sergio', 'Ramos', 'M'),
-    (34, 'Julia', 'Vega', 'F'),
-    (35, 'Oscar', 'Ortega', 'M'),
-    (36, 'Silvia', 'Méndez', 'F'),
-    (37, 'Hugo', 'Suárez', 'M'),
-    (38, 'Alicia', 'Cordero', 'F'),
-    (39, 'Eduardo', 'Valencia', 'M'),
-    (40, 'Natalia', 'Benítez', 'F'),
-    (41, 'Raúl', 'Carvajal', 'M'),
-    (42, 'Lourdes', 'Salazar', 'F'),
-    (43, 'Enrique', 'Ponce', 'M'),
-    (44, 'Claudia', 'León', 'F'),
-    (45, 'Javier', 'Uribe', 'M'),
-    (46, 'Margarita', 'Ayala', 'F'),
-    (47, 'Tomás', 'Barrera', 'M'),
-    (48, 'Isabela', 'Cabrera', 'F'),
-    (49, 'Pablo', 'Hernández', 'M'),
-    (50, 'Paula', 'Quintero', 'F')
+    (1, 'Juan', 'Pérez', 'M'), (2, 'María', 'García', 'F'), (3, 'Carlos', 'Rodríguez', 'M'),
+    (4, 'Ana', 'Martínez', 'F'), (5, 'Luis', 'López', 'M'), (6, 'Laura', 'González', 'F'),
+    (7, 'Pedro', 'Sánchez', 'M'), (8, 'Isabel', 'Ramírez', 'F'), (9, 'Miguel', 'Torres', 'M'),
+    (10, 'Carmen', 'Flores', 'F'), (11, 'Jorge', 'Díaz', 'M'), (12, 'Sofía', 'Ortiz', 'F'),
+    (13, 'Diego', 'Cruz', 'M'), (14, 'Elena', 'Morales', 'F'), (15, 'Fernando', 'Reyes', 'M'),
+    (16, 'Patricia', 'Gutiérrez', 'F'), (17, 'Andrés', 'Mendoza', 'M'), (18, 'Teresa', 'Castillo', 'F'),
+    (19, 'Roberto', 'Ríos', 'M'), (20, 'Gloria', 'Aguilar', 'F'), (21, 'Manuel', 'Romero', 'M'),
+    (22, 'Rosa', 'Vargas', 'F'), (23, 'Antonio', 'Soto', 'M'), (24, 'Marta', 'Paredes', 'F'),
+    (25, 'Francisco', 'Castro', 'M'), (26, 'Lucía', 'Jiménez', 'F'), (27, 'Alberto', 'Serrano', 'M'),
+    (28, 'Dolores', 'Herrera', 'F'), (29, 'Rafael', 'Velásquez', 'M'), (30, 'Carmela', 'Núñez', 'F'),
+    (31, 'David', 'Molina', 'M'), (32, 'Angela', 'Delgado', 'F'), (33, 'Sergio', 'Ramos', 'M'),
+    (34, 'Julia', 'Vega', 'F'), (35, 'Oscar', 'Ortega', 'M'), (36, 'Silvia', 'Méndez', 'F'),
+    (37, 'Hugo', 'Suárez', 'M'), (38, 'Alicia', 'Cordero', 'F'), (39, 'Eduardo', 'Valencia', 'M'),
+    (40, 'Natalia', 'Benítez', 'F'), (41, 'Raúl', 'Carvajal', 'M'), (42, 'Lourdes', 'Salazar', 'F'),
+    (43, 'Enrique', 'Ponce', 'M'), (44, 'Claudia', 'León', 'F'), (45, 'Javier', 'Uribe', 'M'),
+    (46, 'Margarita', 'Ayala', 'F'), (47, 'Tomás', 'Barrera', 'M'), (48, 'Isabela', 'Cabrera', 'F'),
+    (49, 'Pablo', 'Hernández', 'M'), (50, 'Paula', 'Quintero', 'F')
 ) AS t(id, nombre, apellido, sexo);
 
--- Creamos una tabla temporal con ciudades
 CREATE TEMP TABLE temp_ciudades_postgres AS
 SELECT * FROM (VALUES
-    (1, 'Quito'),
-    (2, 'Guayaquil'),
-    (3, 'Cuenca'),
-    (4, 'Sangolquí'),
-    (5, 'Cumbayá'),
-    (6, 'Tumbaco'),
-    (7, 'Machachi'),
-    (8, 'Latacunga'),
-    (9, 'Ambato'),
-    (10, 'Riobamba')
+    (1, 'Quito'), (2, 'Guayaquil'), (3, 'Cuenca'), (4, 'Sangolquí'),
+    (5, 'Cumbayá'), (6, 'Tumbaco'), (7, 'Machachi'), (8, 'Latacunga'),
+    (9, 'Ambato'), (10, 'Riobamba')
 ) AS t(id, ciudad);
 
--- Creamos una tabla temporal con segmentos
 CREATE TEMP TABLE temp_segmentos_postgres AS
 SELECT codigo_segmento FROM segmento_cliente;
 
--- Insertamos clientes masivos usando las tablas temporales
 INSERT INTO cliente (documento, nombres, ciudad, fecha_nacimiento, sexo, codigo_segmento, fecha_registro, correo, activo)
 SELECT 
     CASE 
@@ -171,7 +126,6 @@ CROSS JOIN (SELECT nombre, apellido, sexo FROM temp_nombres_postgres ORDER BY RA
 CROSS JOIN (SELECT ciudad FROM temp_ciudades_postgres ORDER BY RANDOM() LIMIT 1) c
 CROSS JOIN (SELECT codigo_segmento FROM temp_segmentos_postgres ORDER BY RANDOM() LIMIT 1) s;
 
--- Eliminamos las tablas temporales
 DROP TABLE temp_nombres_postgres;
 DROP TABLE temp_ciudades_postgres;
 DROP TABLE temp_segmentos_postgres;
@@ -241,7 +195,63 @@ CROSS JOIN sucursal s
 WHERE RANDOM() < 0.03
 LIMIT 500;
 
+-- ==================== INVENTARIO MAQUINARIA (2005-2025) ====================
+-- Generamos registros desde 2005 hasta 2025 para tener línea de tiempo larga
+INSERT INTO inventario_maquinaria (codigo_sucursal, nombre_maquina, modelo, fecha_compra, vida_util_anios, costo_compra, costo_mantenimiento_anual, estado, observacion)
+SELECT 
+    s.codigo_sucursal,
+    CASE FLOOR(RANDOM() * 15)
+        WHEN 0 THEN 'Cinta de correr'
+        WHEN 1 THEN 'Elíptica'
+        WHEN 2 THEN 'Bicicleta estática'
+        WHEN 3 THEN 'Máquina de remo'
+        WHEN 4 THEN 'Prensa de piernas'
+        WHEN 5 THEN 'Máquina de poleas'
+        WHEN 6 THEN 'Banco de pesas'
+        WHEN 7 THEN 'Máquina de abdominales'
+        WHEN 8 THEN 'Bicicleta Spinning'
+        WHEN 9 THEN 'Máquina de extensión de cuádriceps'
+        WHEN 10 THEN 'Máquina de curl de isquiotibiales'
+        WHEN 11 THEN 'Máquina de pectorales'
+        WHEN 12 THEN 'Máquina de dorsalera'
+        WHEN 13 THEN 'Máquina de hombros'
+        WHEN 14 THEN 'Máquina de bíceps'
+        ELSE 'Máquina multifuncional'
+    END,
+    CASE FLOOR(RANDOM() * 8)
+        WHEN 0 THEN 'Life Fitness T3'
+        WHEN 1 THEN 'Technogym Excite'
+        WHEN 2 THEN 'Precor TRM 800'
+        WHEN 3 THEN 'Matrix T50'
+        WHEN 4 THEN 'Star Trac 4TR'
+        WHEN 5 THEN 'Cybex 750T'
+        WHEN 6 THEN 'Body Solid EXM'
+        ELSE 'Marca Genérica Pro'
+    END,
+    DATE '2005-01-01' + (FLOOR(RANDOM() * 7300) * INTERVAL '1 day'), -- 2005-2025
+    CASE WHEN RANDOM() < 0.3 THEN 3 WHEN RANDOM() < 0.6 THEN 5 ELSE 7 END,
+    ROUND((500 + RANDOM() * 4500)::NUMERIC, 2),
+    ROUND((50 + RANDOM() * 300)::NUMERIC, 2),
+    CASE 
+        WHEN RANDOM() < 0.7 THEN 'ACTIVA'
+        WHEN RANDOM() < 0.85 THEN 'MANTENIMIENTO'
+        WHEN RANDOM() < 0.95 THEN 'OBSOLETA'
+        ELSE 'BAJA'
+    END,
+    CASE 
+        WHEN RANDOM() < 0.1 THEN 'Requiere mantenimiento mayor'
+        WHEN RANDOM() < 0.2 THEN 'En espera de repuestos'
+        WHEN RANDOM() < 0.3 THEN 'Programada para reemplazo'
+        ELSE NULL
+    END
+FROM generate_series(1, 800) g
+CROSS JOIN sucursal s
+WHERE RANDOM() < 0.05
+LIMIT 500;
+
 -- ==================== VERIFICACIONES ====================
 -- SELECT COUNT(*) AS total_clientes FROM cliente;
 -- SELECT COUNT(*) AS total_metas FROM meta_mensual;
 -- SELECT COUNT(*) AS total_encuestas FROM encuesta_satisfaccion;
+-- SELECT COUNT(*) AS total_maquinaria FROM inventario_maquinaria;
+-- SELECT estado, COUNT(*) FROM inventario_maquinaria GROUP BY estado;
